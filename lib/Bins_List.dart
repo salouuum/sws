@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sws/bin.dart';
 
@@ -59,20 +59,20 @@ class _BinListState extends State<BinList> {
                     SizedBox(height: 15.0,),
                     Text('Capacity ${bin.capacity}%'),
                     SizedBox(height: 10.0,),
-                    Container(
-                      width: 220.0,
-                      child: RoundedProgressBar(
-                        percent: bin.capacity.toDouble(),
-                        height: 22.0,
-                        style: RoundedProgressBarStyle(
-                            colorProgress: Colors.teal,
-                            colorProgressDark: Colors.teal.shade600,
-                            backgroundProgress: Colors.teal.shade100
-
-
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   width: 220.0,
+                    //   child: RoundedProgressBar(
+                    //     percent: bin.capacity.toDouble(),
+                    //     height: 22.0,
+                    //     style: RoundedProgressBarStyle(
+                    //         colorProgress: Colors.teal,
+                    //         colorProgressDark: Colors.teal.shade600,
+                    //         backgroundProgress: Colors.teal.shade100
+                    //
+                    //
+                    //     ),
+                    //   ),
+                    // ),
 
                   ],
                 )

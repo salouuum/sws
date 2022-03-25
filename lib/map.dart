@@ -11,28 +11,25 @@ class UserMap extends StatefulWidget {
 
 class _UserMapState extends State<UserMap> {
   late GoogleMapController googleMapController;
-  Set<Polyline> polylines = {};
+
   void _nearestbin()async{
     Position pos = await _determinePosition();
     int mark = 0;
-    double dis = 0.0;
-    for(int i=0 ; i<markers.length ; i++){
+    double dis = Geolocator.distanceBetween(markers[0].position.latitude, markers[0].position.longitude, pos.latitude, pos.longitude);;
+    for(int i=1 ; i<markers.length ; i++){
       double distance = Geolocator.distanceBetween(markers[i].position.latitude, markers[i].position.longitude, pos.latitude, pos.longitude);
-      if (distance>0 && distance<Geolocator.distanceBetween(markers.elementAt(i-1).position.latitude, markers.elementAt(i-1).position.longitude, pos.latitude, pos.longitude)){
+      if (distance>2 && distance<dis){
         dis = distance;
-        mark=i;
+        if(markers[i].position!=LatLng(pos.latitude, pos.longitude))
+        {mark=i;}
       }
     }
+    googleMapController.animateCamera(
+      CameraUpdate.newCameraPosition(CameraPosition(target:markers[mark].position , zoom: 15.0,))
+    );
     setState(() {
-      polylines.add(
-          Polyline(polylineId: PolylineId('1234'),
-            points: [
-              LatLng(pos.latitude, pos.longitude),
-              markers[mark].position,
-            ],
-          ));
-    });
 
+    });
   }
   Future _determinePosition() async {
     bool serviceEnabled;
@@ -58,7 +55,7 @@ class _UserMapState extends State<UserMap> {
       return Future.error('Location permissions are permanently denied');
     }
 
-    Position position = await Geolocator.getCurrentPosition();
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
     return position;
   }
@@ -67,11 +64,6 @@ class _UserMapState extends State<UserMap> {
 
     googleMapController
         .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
-
-
-    markers.clear();
-
-    markers.add(Marker(markerId: const MarkerId('currentLocation'),position: LatLng(position.latitude, position.longitude)));
 
     setState(() {});
 
@@ -98,7 +90,10 @@ class _UserMapState extends State<UserMap> {
     // TODO: implement initState
     super.initState();
     _gotolocation();
-    _nearestbin();
+    _setmarker('251564','fvg', 34.154894586498, 35.185648964798489);
+    _setmarker('251564','fvg', 32.154894586498, 33.185648964798489);
+    _setmarker('251564','fvg', 36.154894586498, 31.185648964798489);
+    _setmarker('251564','fvg', 38.154894586498, 30.185648964798489);
   }
   @override
   Widget build(BuildContext context) {
@@ -115,7 +110,7 @@ class _UserMapState extends State<UserMap> {
                 googleMapController = controller;
               },
               mapType: MapType.normal,
-              polylines: polylines,
+
             ),
             Padding(
               padding: const EdgeInsetsDirectional.only(
