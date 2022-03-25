@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sws/bin_discription.dart';
 
 import 'bin.dart';
+import 'bin_discription.dart';
 
-class UserMap extends StatefulWidget {
-  const UserMap({Key? key}) : super(key: key);
+class Worker_Map_Sub extends StatefulWidget {
+  const Worker_Map_Sub({Key? key}) : super(key: key);
 
   @override
-  State<UserMap> createState() => _UserMapState();
+  State<Worker_Map_Sub> createState() => _Worker_Map_SubState();
 }
 
-class _UserMapState extends State<UserMap> {
+class _Worker_Map_SubState extends State<Worker_Map_Sub> {
   late GoogleMapController googleMapController;
 
   void _nearestbin()async{
@@ -28,7 +28,7 @@ class _UserMapState extends State<UserMap> {
       }
     }
     googleMapController.animateCamera(
-      CameraUpdate.newCameraPosition(CameraPosition(target:markers[mark].position , zoom: 15.0,))
+        CameraUpdate.newCameraPosition(CameraPosition(target:markers[mark].position , zoom: 15.0,))
     );
     setState(() {
 
@@ -74,13 +74,13 @@ class _UserMapState extends State<UserMap> {
   void _setmarker(Bin bin){
     Marker marker =Marker(
         markerId: MarkerId(bin.bin_id.toString()),
-      infoWindow: InfoWindow(
-        title: bin.capacity.toString(),
-      ),
-      position: bin.location,
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> BinDescription(bin: bin)));
-      }
+        infoWindow: InfoWindow(
+          title: bin.capacity.toString(),
+        ),
+        position: bin.location,
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> BinDescription(bin: bin)));
+        }
     );
     setState(() {
       markers.add(marker);
@@ -124,6 +124,7 @@ class _UserMapState extends State<UserMap> {
               ),
               child: Container(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Container(
@@ -134,6 +135,7 @@ class _UserMapState extends State<UserMap> {
                         child: MaterialButton(
                           onPressed: _gotolocation,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.location_searching),
                               SizedBox(
@@ -141,37 +143,6 @@ class _UserMapState extends State<UserMap> {
                               ),
                               Text(
                                 'my location',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 15.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      child: Container(
-
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.blue,
-                        ),
-                        child: MaterialButton(
-                          onPressed: _nearestbin,
-                          child: Row(
-                            children: [
-                              Icon(Icons.recycling),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                'nearest bin',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -193,3 +164,4 @@ class _UserMapState extends State<UserMap> {
     );
   }
 }
+

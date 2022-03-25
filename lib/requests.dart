@@ -1,29 +1,31 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sws/bin.dart';
-import 'package:sws/bin_discription.dart';
 
-class BinList extends StatefulWidget {
-  const BinList({Key? key}) : super(key: key);
+import 'bin.dart';
+import 'bin_discription.dart';
+
+
+class Requests extends StatefulWidget {
 
   @override
-  State<BinList> createState() => _BinListState();
+  State<Requests> createState() => _RequestsState();
 }
 
-class _BinListState extends State<BinList> {
+class _RequestsState extends State<Requests> {
   Bin bin = Bin(bin_id: 12, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
+
   @override
   Widget build(BuildContext context) {
-    return  ListView.separated(
+    return ListView.separated(
       itemBuilder: (context, index)=> buildItem(bin),
       separatorBuilder: (context, index)=> SizedBox(height: 1.0,),
       itemCount: 10,
     );
+
   }
+
   Widget buildItem (Bin bin) {
-    double value = bin.capacity.toDouble();
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Material(
@@ -37,10 +39,7 @@ class _BinListState extends State<BinList> {
           ),
           child: GestureDetector(
             onTap: () {
-          Navigator.push(
-              context,
-            MaterialPageRoute(builder: (context) => BinDescription(bin: bin ,))
-          );
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>BinDescription(bin: bin,)));
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,21 +62,8 @@ class _BinListState extends State<BinList> {
                       ),
                     ),
                     SizedBox(height: 15.0,),
-                    Text('Capacity ${bin.capacity}%'),
+                    Text('Capacity ${bin.capacity.toInt()}%'),
                     SizedBox(height: 10.0,),
-                    Container(
-                      width: 220.0,
-                      child: Slider(
-                        value: value,
-                        max: 100,
-                        min: 0,
-                        onChanged: (double v) {
-                          setState(() {
-                            value = v ;
-                          });
-                        },
-                        ),
-                      ),
                   ],
                 )
               ],

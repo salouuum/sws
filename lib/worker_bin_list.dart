@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'bin.dart';
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sws/bin.dart';
-import 'package:sws/bin_discription.dart';
+class Worker_BinList extends StatefulWidget {
 
-class BinList extends StatefulWidget {
-  const BinList({Key? key}) : super(key: key);
 
   @override
-  State<BinList> createState() => _BinListState();
+  State<Worker_BinList> createState() => _Worker_BinListState();
 }
 
-class _BinListState extends State<BinList> {
+class _Worker_BinListState extends State<Worker_BinList> {
   Bin bin = Bin(bin_id: 12, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
   @override
   Widget build(BuildContext context) {
@@ -37,10 +34,10 @@ class _BinListState extends State<BinList> {
           ),
           child: GestureDetector(
             onTap: () {
-          Navigator.push(
-              context,
-            MaterialPageRoute(builder: (context) => BinDescription(bin: bin ,))
-          );
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Worker(bin: bin ,))
+              );
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,8 +73,8 @@ class _BinListState extends State<BinList> {
                             value = v ;
                           });
                         },
-                        ),
                       ),
+                    ),
                   ],
                 )
               ],
