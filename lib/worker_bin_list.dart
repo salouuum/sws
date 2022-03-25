@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 import 'bin.dart';
+import 'bin_description.dart';
+
 
 class Worker_BinList extends StatefulWidget {
 
@@ -34,11 +38,11 @@ class _Worker_BinListState extends State<Worker_BinList> {
           ),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Worker(bin: bin ,))
-              );
-            },
+           Navigator.push(
+                context,
+                  MaterialPageRoute(builder: (context) => BinDescription(bin: bin ,))
+               );
+             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

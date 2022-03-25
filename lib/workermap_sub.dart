@@ -3,7 +3,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'bin.dart';
-import 'bin_discription.dart';
+import 'bin_description.dart';
+
 
 class Worker_Map_Sub extends StatefulWidget {
   const Worker_Map_Sub({Key? key}) : super(key: key);

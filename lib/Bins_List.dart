@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sws/bin.dart';
-import 'package:sws/bin_discription.dart';
+
+
+import 'bin_description.dart';
 
 class BinList extends StatefulWidget {
   const BinList({Key? key}) : super(key: key);
