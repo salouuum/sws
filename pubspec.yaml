@@ -43,7 +43,8 @@ dependencies:
   map_launcher: ^2.2.1+1
   intl: ^0.17.0
   animated_splash_screen: ^1.2.0
-
+  http: ^0.13.4
+  percent_indicator: ^4.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

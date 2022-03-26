@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'bin.dart';
 import 'bin_description.dart';
@@ -65,7 +66,19 @@ class _RequestsState extends State<Requests> {
                     Text('Capacity ${bin.capacity.toInt()}%'),
                     SizedBox(height: 10.0,),
                   ],
-                )
+                ),
+                SizedBox(width: 60.0,),
+                CircularPercentIndicator(
+                  radius: 40.0,
+                  lineWidth: 10.0,
+                  percent: bin.capacity.toDouble()/100,
+                  center: Text('${bin.capacity}%',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),),
+                  progressColor: Colors.teal,
+                ),
               ],
             ),
           ),

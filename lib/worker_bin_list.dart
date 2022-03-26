@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 
 import 'bin.dart';
@@ -80,7 +81,19 @@ class _Worker_BinListState extends State<Worker_BinList> {
                       ),
                     ),
                   ],
-                )
+                ),
+                SizedBox(width: 60.0,),
+                CircularPercentIndicator(
+                  radius: 40.0,
+                  lineWidth: 10.0,
+                  percent: bin.capacity.toDouble()/100,
+                  center: Text('${bin.capacity}%',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),),
+                  progressColor: Colors.teal,
+                ),
               ],
             ),
           ),

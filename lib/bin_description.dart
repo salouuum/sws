@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sws/bin.dart';
 
 class BinDescription extends StatefulWidget {
-
    BinDescription({
     required Bin bin
    });
@@ -14,7 +14,7 @@ class BinDescription extends StatefulWidget {
 
 class _BinDescriptionState extends State<BinDescription> {
 
-  double percent = 12.0;
+  double percent = 20.0;
 
 
   @override
@@ -42,6 +42,22 @@ class _BinDescriptionState extends State<BinDescription> {
               SizedBox(height: 10.0,),
               Text('More Info.'),
               SizedBox(height: 10.0,),
+              Center(
+                child: CircularPercentIndicator(
+                    radius: 70.0,
+                  progressColor: Colors.teal,
+                 lineWidth: 20,
+                  percent: percent/100,
+                  center: Text('${percent.toInt()}%',
+                  style:TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35.0,
+                    color: Colors.teal,
+                  ) ,
+                  ) ,
+                ),
+              ),
+              SizedBox(height: 30.0,),
               Row(
                 children: [
                   SizedBox(width: 5.0,),

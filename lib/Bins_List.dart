@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sws/bin.dart';
+
 
 
 import 'bin_description.dart';
 
 class BinList extends StatefulWidget {
-  const BinList({Key? key}) : super(key: key);
-
   @override
   State<BinList> createState() => _BinListState();
 }
 
+
 class _BinListState extends State<BinList> {
+  var isloaded =false;
   Bin bin = Bin(bin_id: 12, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return  ListView.separated(
@@ -67,21 +76,20 @@ class _BinListState extends State<BinList> {
                     SizedBox(height: 15.0,),
                     Text('Capacity ${bin.capacity}%'),
                     SizedBox(height: 10.0,),
-                    Container(
-                      width: 220.0,
-                      child: Slider(
-                        value: value,
-                        max: 100,
-                        min: 0,
-                        onChanged: (double v) {
-                          setState(() {
-                            value = v ;
-                          });
-                        },
-                        ),
-                      ),
                   ],
-                )
+                ),
+                SizedBox(width: 60.0,),
+                CircularPercentIndicator(
+                    radius: 40.0,
+                  lineWidth: 10.0,
+                  percent: bin.capacity.toDouble()/100,
+                  center: Text('${bin.capacity}%',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),),
+                  progressColor: Colors.teal,
+                ),
               ],
             ),
           ),
