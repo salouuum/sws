@@ -7,7 +7,8 @@ import 'package:sws/bin.dart';
 
 
 
-import 'bin_description.dart';
+
+import 'bindiscription.dart';
 
 class BinList extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _BinListState extends State<BinList> {
             onTap: () {
           Navigator.push(
               context,
-            MaterialPageRoute(builder: (context) => BinDescription(bin: bin ,))
+            MaterialPageRoute(builder: (context) => Bin_Discription(bin: bin ,))
           );
             },
             child: Row(

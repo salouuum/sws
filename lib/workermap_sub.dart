@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'bin.dart';
-import 'bin_description.dart';
+import 'bindiscription.dart';
 
 
 class Worker_Map_Sub extends StatefulWidget {
@@ -80,7 +79,7 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
         ),
         position: bin.location,
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> BinDescription(bin: bin)));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> Bin_Discription(bin: bin)));
         }
     );
     setState(() {
@@ -88,7 +87,7 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
     });
   }
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
-  Bin bin = Bin(bin_id: 12, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
+  Bin bin = Bin(bin_id: 2, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
   List<Marker> markers = [];
   @override
   void initState() {

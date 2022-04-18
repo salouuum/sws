@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'bin.dart';
-import 'bin_description.dart';
+import 'bindiscription.dart';
 
 
 class Requests extends StatefulWidget {
@@ -14,7 +14,7 @@ class Requests extends StatefulWidget {
 }
 
 class _RequestsState extends State<Requests> {
-  Bin bin = Bin(bin_id: 12, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
+  Bin bin = Bin(bin_id: 2, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _RequestsState extends State<Requests> {
           ),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>BinDescription(bin: bin,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Bin_Discription(bin: bin,)));
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

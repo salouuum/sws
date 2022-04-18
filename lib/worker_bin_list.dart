@@ -4,7 +4,8 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 
 import 'bin.dart';
-import 'bin_description.dart';
+import 'bindiscription.dart';
+
 
 
 class Worker_BinList extends StatefulWidget {
@@ -15,7 +16,7 @@ class Worker_BinList extends StatefulWidget {
 }
 
 class _Worker_BinListState extends State<Worker_BinList> {
-  Bin bin = Bin(bin_id: 12, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
+  Bin bin = Bin(bin_id: 2, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
   @override
   Widget build(BuildContext context) {
     return  ListView.separated(
@@ -41,7 +42,7 @@ class _Worker_BinListState extends State<Worker_BinList> {
             onTap: () {
            Navigator.push(
                 context,
-                  MaterialPageRoute(builder: (context) => BinDescription(bin: bin ,))
+                  MaterialPageRoute(builder: (context) => Bin_Discription(bin: bin ,))
                );
              },
             child: Row(
