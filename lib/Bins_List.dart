@@ -8,7 +8,7 @@ import 'package:sws/bin.dart';
 
 
 
-import 'bindiscription.dart';
+import '../bindiscription.dart';
 
 class BinList extends StatefulWidget {
   @override

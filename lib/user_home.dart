@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sws/Bins_List.dart';
 
+
+import 'Bins_List.dart';
 import 'map.dart';
 
 class User_Home extends StatefulWidget {
