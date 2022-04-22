@@ -1,9 +1,28 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:sws/services/authentication.dart';
 import 'package:sws/worker_home.dart';
 
 
-class Login_SWS extends StatelessWidget {
-  const Login_SWS({Key? key}) : super(key: key);
+
+class Login_SWS extends StatefulWidget {
+  @override
+  State<Login_SWS> createState() => _Login_SWSState();
+}
+
+class _Login_SWSState extends State<Login_SWS> {
+  Authentication _authentication = Authentication();
+
+  TextEditingController emailcontroller = TextEditingController();
+
+  TextEditingController passwordcontroller = TextEditingController();
+  dynamic result ;
+  @override
+  void initState()  {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,18 +57,23 @@ class Login_SWS extends StatelessWidget {
               SizedBox(height: 50.0,),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Work ID',
+                  labelText: 'Work Email',
+                  prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.emailAddress,
+                controller: emailcontroller,
+
               ),
               SizedBox(height: 15.0,),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'National ID',
+                  labelText: 'Password',
+                  prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.visiblePassword,
+                controller: passwordcontroller,
               ),
               SizedBox(height: 40.0,),
               Container(
@@ -59,8 +83,15 @@ class Login_SWS extends StatelessWidget {
                   color: Colors.teal,
                 ),
                 child: MaterialButton(
-                  onPressed: (){
-                   Navigator.push(context, MaterialPageRoute(builder: (context)=> StaffHome()));
+                  onPressed: ()async{
+                    if( await signin() ==null){
+                      print('something went wrong');
+                    }else{
+                      emailcontroller.clear();
+                      passwordcontroller.clear();
+                      print('login successed');
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>StaffHome()));
+                    }
                   },
                   child: Text(
                     'Login',
@@ -77,5 +108,12 @@ class Login_SWS extends StatelessWidget {
         ),
       ),
     );
+
+  }
+
+  dynamic signin() async{
+    dynamic authresult = await _authentication.Login(emailcontroller.text, passwordcontroller.text);
+    print(authresult.toString());
+    return authresult;
   }
 }
