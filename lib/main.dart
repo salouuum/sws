@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
             children: [
               Image(
                 fit: BoxFit.fill,
-                image: AssetImage('images/Bin1.png'),
+                image: AssetImage('images/Bin0.png'),
                 width: 300,
                 height: 300,
               ),
