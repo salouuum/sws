@@ -1,3 +1,0 @@
-class DataBase_Manager {
-  
-}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sws/allbins.dart';
 import 'package:sws/workermap_sub.dart';
 import 'Bins_List.dart';
 import 'bin.dart';
@@ -21,7 +22,7 @@ class _Worker_MapState extends State<Worker_Map> {
   ];
   List<Widget> maplist = [
     Worker_Map_Sub(),
-    BinList(),
+    AllBins(),
   ];
 
 

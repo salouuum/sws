@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'bin.dart';
 import 'bindiscription.dart';
+import 'database_manager/Database.dart';
 
 
 class UserMap extends StatefulWidget {
@@ -14,7 +15,17 @@ class UserMap extends StatefulWidget {
 
 class _UserMapState extends State<UserMap> {
   late GoogleMapController googleMapController;
-
+  List? bins;
+  getbins()async{
+    dynamic resultant = await DataBase_Manager().getavailablebins();
+    if(resultant==null){
+      print('unable to relieve');
+    }else{
+      setState(() {
+        _setmarkers(resultant);
+      });
+    }
+  }
   void _nearestbin()async{
     Position pos = await _determinePosition();
     int mark = 0;
@@ -71,31 +82,48 @@ class _UserMapState extends State<UserMap> {
     setState(() {});
 
   }
-  void _setmarker(Bin bin){
-    Marker marker =Marker(
-        markerId: MarkerId(bin.bin_id.toString()),
-      infoWindow: InfoWindow(
-        title: bin.capacity.toString(),
-      ),
-      position: bin.location,
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> Bin_Discription(bin: bin)));
-      }
-    );
-    setState(() {
-      markers.add(marker);
-    });
+  AssetImage getimage(dynamic bin){
+    AssetImage image ;
+    if(bin>=75){
+      image = AssetImage('images/Bin2.png');
+    }else{
+      image = AssetImage('images/Bin1.png');
+    }
+    return image;
+  }
+  void _setmarkers(List binslist) {
+    for (int i = 0; i < binslist!.length; i++) {
+      Marker marker = Marker(
+          markerId: MarkerId(binslist[i]['NC-MA'].toString()),
+          infoWindow: InfoWindow(
+            title: binslist[i]['capacity'].toString(),
+          ),
+          position: LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => Bin_Discription(
+                  location: LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude),
+                  capacity: binslist[i]['capacity'],
+                  bin_id: binslist[i]['NC-MA'],
+                  fired: binslist[i]['alarm'],
+                  image: getimage(binslist[i]['capacity']),)
+            ));
+          }
+      );
+      setState(() {
+        markers.add(marker);
+      });
+    }
   }
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
-  Bin bin = Bin(bin_id: 2, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
   List<Marker> markers = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _gotolocation();
-    _setmarker(bin);
-
+    getbins();
   }
   @override
   Widget build(BuildContext context) {

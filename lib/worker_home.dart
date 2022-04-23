@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sws/requests.dart';
 import 'package:sws/worker_map.dart';
-
-import 'Bins_List.dart';
+import 'allbins.dart';
 
 class StaffHome extends StatefulWidget {
   const StaffHome({Key? key}) : super(key: key);
@@ -24,11 +23,7 @@ class _StaafHomeState extends State<StaffHome> {
     Icons.list ,
     Icons.map ,
   ];
-  List<Widget> body =[
-    Worker_Map(),
 
-    BinList(),
-  ];
 
 
   @override

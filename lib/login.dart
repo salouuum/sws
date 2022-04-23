@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:sws/services/authentication.dart';
 import 'package:sws/worker_home.dart';
 
-
-
 class Login_SWS extends StatefulWidget {
   @override
   State<Login_SWS> createState() => _Login_SWSState();
@@ -17,9 +15,13 @@ class _Login_SWSState extends State<Login_SWS> {
   TextEditingController emailcontroller = TextEditingController();
 
   TextEditingController passwordcontroller = TextEditingController();
-  dynamic result ;
+  
+  bool ispassword =true;
+
+
+  IconData icon = Icons.remove_red_eye;
   @override
-  void initState()  {
+  void initState() {
     super.initState();
   }
 
@@ -63,15 +65,34 @@ class _Login_SWSState extends State<Login_SWS> {
                 ),
                 keyboardType: TextInputType.emailAddress,
                 controller: emailcontroller,
-
+                validator: (value) {
+                  if(value!.isEmpty){
+                   return 'email can not be empty';
+                  }
+                },
               ),
               SizedBox(height: 15.0,),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Password',
                   prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          ispassword = !ispassword;
+                          icon = ispassword ? Icons.remove_red_eye : Icons
+                              .visibility_off;
+                        });
+                      },
+                    icon: Icon(icon),
+                  ),
                   border: OutlineInputBorder(),
                 ),
+                validator: (value){
+                  if(value!.isEmpty){
+                    return 'password cannot be empty';
+                  }
+                },
                 keyboardType: TextInputType.visiblePassword,
                 controller: passwordcontroller,
               ),

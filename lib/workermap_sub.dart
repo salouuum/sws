@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'bin.dart';
 import 'bindiscription.dart';
+import 'database_manager/Database.dart';
 
 
 class Worker_Map_Sub extends StatefulWidget {
@@ -14,25 +15,29 @@ class Worker_Map_Sub extends StatefulWidget {
 
 class _Worker_Map_SubState extends State<Worker_Map_Sub> {
   late GoogleMapController googleMapController;
-
-  void _nearestbin()async{
-    Position pos = await _determinePosition();
-    int mark = 0;
-    double dis = Geolocator.distanceBetween(markers[0].position.latitude, markers[0].position.longitude, pos.latitude, pos.longitude);;
-    for(int i=1 ; i<markers.length ; i++){
-      double distance = Geolocator.distanceBetween(markers[i].position.latitude, markers[i].position.longitude, pos.latitude, pos.longitude);
-      if (distance>2 && distance<dis){
-        dis = distance;
-        if(markers[i].position!=LatLng(pos.latitude, pos.longitude))
-        {mark=i;}
-      }
+  List? bins;
+  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
+  List<Marker> markers = [];
+  late BitmapDescriptor icon;
+  getfbins()async{
+    dynamic resultant = await DataBase_Manager().getbins();
+    if(resultant==null){
+      print('unable to relieve');
+    }else{
+      setState(() {
+        _setmarkers(resultant , BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed));
+      });
     }
-    googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target:markers[mark].position , zoom: 15.0,))
-    );
-    setState(() {
-
-    });
+  }
+  getavailbins()async{
+    dynamic resultant = await DataBase_Manager().getavailablebins();
+    if(resultant==null){
+      print('unable to relieve');
+    }else{
+      setState(() {
+        _setmarkers(resultant , BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+      });
+    }
   }
   Future _determinePosition() async {
     bool serviceEnabled;
@@ -71,31 +76,48 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
     setState(() {});
 
   }
-  void _setmarker(Bin bin){
-    Marker marker =Marker(
-        markerId: MarkerId(bin.bin_id.toString()),
-        infoWindow: InfoWindow(
-          title: bin.capacity.toString(),
-        ),
-        position: bin.location,
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> Bin_Discription(bin: bin)));
-        }
-    );
-    setState(() {
-      markers.add(marker);
-    });
+  AssetImage getimage(dynamic bin){
+    AssetImage image ;
+    if(bin>=75){
+      image = AssetImage('images/Bin2.png');
+    }else{
+      image = AssetImage('images/Bin1.png');
+    }
+    return image;
   }
-  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
-  Bin bin = Bin(bin_id: 2, location: LatLng(34.000004584,35.049874564), capacity:75, fired: false);
-  List<Marker> markers = [];
+  void _setmarkers(List binslist , BitmapDescriptor icon)async {
+    for (int i = 0; i < binslist!.length; i++) {
+      Marker marker = Marker(
+          markerId: MarkerId( binslist[i]['NC-MA'].toString()),
+          infoWindow: InfoWindow(
+            title: binslist[i]['capacity'].toString(),
+          ),
+          position:LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude),
+          icon: icon,
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => Bin_Discription(
+                  location: LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude) ,
+                  capacity: binslist[i]['capacity'],
+                  bin_id: binslist[i]['NC-MA'],
+                  fired: binslist[i]['alarm'],
+                  image: getimage(binslist[i]['capacity']),)
+            ));
+          }
+      );
+      setState(() {
+        markers.add(marker);
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _gotolocation();
-    _setmarker(bin);
-
+    getfbins();
+    getavailbins();
   }
   @override
   Widget build(BuildContext context) {
@@ -110,6 +132,7 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
               markers: markers.map((e) => e).toSet(),
               onMapCreated: (GoogleMapController controller){
                 googleMapController = controller;
+                print(bins![0]['location'].toString());
               },
               mapType: MapType.normal,
 

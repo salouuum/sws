@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import 'bin.dart';
 import 'bindiscription.dart';
 import 'database_manager/Database.dart';
 
-
-class Requests extends StatefulWidget {
+class AllBins extends StatefulWidget {
+  const AllBins({Key? key}) : super(key: key);
 
   @override
-  State<Requests> createState() => _RequestsState();
+  State<AllBins> createState() => _AllBinsState();
 }
 
-class _RequestsState extends State<Requests> {
+class _AllBinsState extends State<AllBins> {
+  var isloaded =false;
   List? bins ;
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _RequestsState extends State<Requests> {
     getbins();
   }
   getbins()async{
-    dynamic resultant = await DataBase_Manager().getfullbins();
+    dynamic resultant = await DataBase_Manager().getbins();
     if(resultant==null){
       print('unable to relieve');
     }else{
@@ -49,7 +49,7 @@ class _RequestsState extends State<Requests> {
     if(bins == null){
       return Center(child:
       Text(
-        'Loading ...',
+      'Loading ...',
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
@@ -135,3 +135,5 @@ class _RequestsState extends State<Requests> {
     }
   }
 }
+
+
