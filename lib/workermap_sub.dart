@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'bin.dart';
 import 'bindiscription.dart';
 import 'database_manager/Database.dart';
 
@@ -14,13 +15,13 @@ class Worker_Map_Sub extends StatefulWidget {
 }
 
 class _Worker_Map_SubState extends State<Worker_Map_Sub> {
-  late GoogleMapController googleMapController;
   List? bins;
+  late GoogleMapController googleMapController;
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
   List<Marker> markers = [];
   late BitmapDescriptor icon;
   getfbins()async{
-    dynamic resultant = await DataBase_Manager().getbins();
+    dynamic resultant = await DataBase_Manager().getfullbins();
     if(resultant==null){
       print('unable to relieve');
     }else{
@@ -36,6 +37,7 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
     }else{
       setState(() {
         _setmarkers(resultant , BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen));
+        bins = resultant ;
       });
     }
   }
@@ -88,20 +90,17 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
   void _setmarkers(List binslist , BitmapDescriptor icon)async {
     for (int i = 0; i < binslist!.length; i++) {
       Marker marker = Marker(
-          markerId: MarkerId( binslist[i]['NC-MA'].toString()),
+          markerId: MarkerId( binslist[i]['NC-MA']),
           infoWindow: InfoWindow(
             title: binslist[i]['capacity'].toString(),
           ),
-          position:LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude),
+          position:LatLng(double.parse(binslist[i]['lat']),double.parse(binslist[i]['long'])),
           icon: icon,
           onTap: () {
             Navigator.push(context, MaterialPageRoute(
                 builder: (context) => Bin_Discription(
-                  location: LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude) ,
-                  capacity: binslist[i]['capacity'],
                   bin_id: binslist[i]['NC-MA'],
-                  fired: binslist[i]['alarm'],
-                  image: getimage(binslist[i]['capacity']),)
+                )
             ));
           }
       );
@@ -118,73 +117,92 @@ class _Worker_Map_SubState extends State<Worker_Map_Sub> {
     _gotolocation();
     getfbins();
     getavailbins();
+    Timer timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      getavailbins();
+      getfbins();
+    });
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body:SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            GoogleMap(
-              zoomControlsEnabled: false,
-              initialCameraPosition: initialCameraPosition,
-              markers: markers.map((e) => e).toSet(),
-              onMapCreated: (GoogleMapController controller){
-                googleMapController = controller;
-                print(bins![0]['location'].toString());
-              },
-              mapType: MapType.normal,
-
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: 20.0,
-                end: 65.0,
-                bottom: 15.0,
-                top: 15.0,
+    return getbody();
+  }
+  Widget getbody(){
+    if(bins == null){
+      return Center(child:
+      Text(
+        'Loading ...',
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 40.0,
+        ),
+      )
+      );
+    }else{
+      return Scaffold(
+        body:SafeArea(
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: [
+              GoogleMap(
+                zoomControlsEnabled: false,
+                initialCameraPosition: initialCameraPosition,
+                markers: markers.map((e) => e).toSet(),
+                onMapCreated: (GoogleMapController controller){
+                  googleMapController = controller;
+                },
+                mapType: MapType.normal,
 
               ),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.blue,
-                        ),
-                        child: MaterialButton(
-                          onPressed: _gotolocation,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.location_searching),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                'my location',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 15.0,
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 20.0,
+                  end: 65.0,
+                  bottom: 15.0,
+                  top: 15.0,
+
+                ),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Colors.blue,
+                          ),
+                          child: MaterialButton(
+                            onPressed: _gotolocation,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.location_searching),
+                                SizedBox(
+                                  width: 10.0,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  'my location',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ) ,
-    );
+            ],
+          ),
+        ) ,
+      );
+    }
   }
 }
 

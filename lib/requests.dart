@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -5,10 +7,12 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'bin.dart';
 import 'bindiscription.dart';
+import 'bindiscription_requests.dart';
 import 'database_manager/Database.dart';
 
 
 class Requests extends StatefulWidget {
+
 
   @override
   State<Requests> createState() => _RequestsState();
@@ -21,6 +25,9 @@ class _RequestsState extends State<Requests> {
     // TODO: implement initState
     super.initState();
     getbins();
+    Timer timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    getbins();
+    });
   }
   getbins()async{
     dynamic resultant = await DataBase_Manager().getfullbins();
@@ -48,13 +55,18 @@ class _RequestsState extends State<Requests> {
   Widget getbody(){
     if(bins == null){
       return Center(child:
-      Text(
-        'Loading ...',
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 40.0,
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Loading ...',
+            style: TextStyle(
+              color: Colors.teal,
+              fontWeight: FontWeight.bold,
+              fontSize: 40.0,
+            ),
+          ),
+        ],
       )
       );
     }else{
@@ -74,53 +86,55 @@ class _RequestsState extends State<Requests> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Bin_Discription(
+                      MaterialPageRoute(builder: (context) => Bin_Discription_Request(
                         bin_id:bins![index]['NC-MA'] ,
-                        location: LatLng(bins![index]['location'].latitude,bins![index]['location'].longitude),
-                        fired: bins![index]['alarm'],
-                        capacity: bins![index]['capacity'],
-                        image: getimage(bins![index]['capacity']),
                       ))
                   );
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image(
-                      image: getimage(bins![index]['capacity']),
-                      width: 110.0,
-                      height: 110.0,
-                      fit: BoxFit.contain,
+                    Expanded(
+                      child: Image(
+                        image: getimage(bins![index]['capacity']),
+                        width: 110.0,
+                        height: 110.0,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5.0,),
-                        Text(
-                          bins![index]['NC-MA-01'].toString(),
-                          style: TextStyle(
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5.0,),
+                          Text(
+                            'bin id : ${bins![index]['NC-MA']}',
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 15.0,),
-                        Text('Capacity ${bins![index]['capacity']}%'),
-                        SizedBox(height: 10.0,),
-                      ],
+                          SizedBox(height: 15.0,),
+                          Text('Capacity ${bins![index]['capacity']}%'),
+                          SizedBox(height: 10.0,),
+                        ],
+                      ),
                     ),
                     SizedBox(width: 60.0,),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: CircularPercentIndicator(
-                        radius: 40.0,
-                        lineWidth: 10.0,
-                        percent: bins![index]['capacity'].toDouble()/100,
-                        center: Text('${bins![index]['capacity']}%',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal,
-                          ),),
-                        progressColor: Colors.teal,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: CircularPercentIndicator(
+                          radius: 40.0,
+                          lineWidth: 10.0,
+                          percent: bins![index]['capacity']/100,
+                          center: Text('${bins![index]['capacity']}%',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal,
+                            ),),
+                          progressColor: Colors.teal,
+                        ),
                       ),
                     ),
                   ],

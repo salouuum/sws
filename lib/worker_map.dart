@@ -7,7 +7,7 @@ import 'Bins_List.dart';
 import 'bin.dart';
 
 class Worker_Map extends StatefulWidget {
-  const Worker_Map({Key? key}) : super(key: key);
+
 
   @override
   State<Worker_Map> createState() => _Worker_MapState();

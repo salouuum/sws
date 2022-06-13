@@ -1,6 +1,8 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sws/database_manager/Database.dart';
 import 'package:sws/services/authentication.dart';
 import 'package:sws/worker_home.dart';
 
@@ -106,14 +108,16 @@ class _Login_SWSState extends State<Login_SWS> {
                   ),
                   child: MaterialButton(
                     onPressed: ()async{
+                      dynamic user = await signin();
+                      await savepref(user.uid.toString());
                       if(FormKey.currentState!.validate()){
-                      if( await signin() ==null){
+                      if( user ==null){
                         print('something went wrong');
                       }else{
                         emailcontroller.clear();
                         passwordcontroller.clear();
                         print('login successed');
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StaffHome()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StaffHome(uid: user.uid)));
                       }
                     }
                       },
@@ -141,5 +145,8 @@ class _Login_SWSState extends State<Login_SWS> {
     print(authresult.toString());
     return authresult;
   }
-
+  savepref(String uid) async{
+   final prefrences = await SharedPreferences.getInstance();
+   await prefrences.setString('uid', uid);
+  }
 }

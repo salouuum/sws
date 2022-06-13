@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -94,20 +96,17 @@ class _UserMapState extends State<UserMap> {
   void _setmarkers(List binslist) {
     for (int i = 0; i < binslist!.length; i++) {
       Marker marker = Marker(
-          markerId: MarkerId(binslist[i]['NC-MA'].toString()),
+          markerId: MarkerId(binslist[i]['NC-MA']),
           infoWindow: InfoWindow(
             title: binslist[i]['capacity'].toString(),
           ),
-          position: LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude),
+          position: LatLng(double.parse(binslist[i]['lat']),double.parse(binslist[i]['long'])),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(
                 builder: (context) => Bin_Discription(
-                  location: LatLng(binslist[i]['location'].latitude,binslist[i]['location'].longitude),
-                  capacity: binslist[i]['capacity'],
                   bin_id: binslist[i]['NC-MA'],
-                  fired: binslist[i]['alarm'],
-                  image: getimage(binslist[i]['capacity']),)
+                  )
             ));
           }
       );
@@ -124,6 +123,9 @@ class _UserMapState extends State<UserMap> {
     super.initState();
     _gotolocation();
     getbins();
+    Timer timer = Timer.periodic(Duration(seconds: 3), (timer) {
+     getbins();
+    });
   }
   @override
   Widget build(BuildContext context) {

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sws/profile.dart';
 import 'package:sws/requests.dart';
 import 'package:sws/worker_map.dart';
 import 'allbins.dart';
 
 class StaffHome extends StatefulWidget {
-  const StaffHome({Key? key}) : super(key: key);
+final dynamic uid ;
+StaffHome({
+  required this.uid,
+});
 
   @override
   State<StaffHome> createState() => _StaafHomeState();
@@ -31,7 +35,12 @@ class _StaafHomeState extends State<StaffHome> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        title: Text('Home'),
+        leading: IconButton(
+            onPressed: (){
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>ProfileScreen(uid : widget.uid)));
+            },
+            icon: Icon(Icons.account_circle_outlined)),
+        title: Text('Home')
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.teal,
