@@ -1,12 +1,30 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:sws/requests.dart';
 import 'package:sws/user_home.dart';
 
 import 'login.dart';
 
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Requests())
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

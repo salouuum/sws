@@ -1,5 +1,8 @@
 
 
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sws/database_manager/Database.dart';
@@ -16,13 +19,20 @@ class _Login_SWSState extends State<Login_SWS> {
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
   bool ispassword =true;
+  DataBase_Manager db = DataBase_Manager();
   IconData icon = Icons.remove_red_eye;
   var FormKey = GlobalKey<FormState>();
+  late String token ;
+  var fbm = FirebaseMessaging.instance;
 
   @override
   void initState()  {
     super.initState();
-
+  fbm.getToken().then((value){
+    setState(() {
+      token = value! ;
+    });
+  });
   }
 
   @override
@@ -110,6 +120,7 @@ class _Login_SWSState extends State<Login_SWS> {
                     onPressed: ()async{
                       dynamic user = await signin();
                       await savepref(user.uid.toString());
+                      await saveemail (emailcontroller.text);
                       if(FormKey.currentState!.validate()){
                       if( user ==null){
                         print('something went wrong');
@@ -117,6 +128,7 @@ class _Login_SWSState extends State<Login_SWS> {
                         emailcontroller.clear();
                         passwordcontroller.clear();
                         print('login successed');
+                       await db.sendusertoken(user.uid.toString(), token);
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>StaffHome(uid: user.uid)));
                       }
                     }
@@ -148,5 +160,10 @@ class _Login_SWSState extends State<Login_SWS> {
   savepref(String uid) async{
    final prefrences = await SharedPreferences.getInstance();
    await prefrences.setString('uid', uid);
+  }
+
+  saveemail(String email)async {
+    final prefrences = await SharedPreferences.getInstance();
+    await prefrences.setString('email', email);
   }
 }

@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DataBase_Manager {
-  // fetch bins info
+  final CollectionReference workerslist =
+  FirebaseFirestore.instance.collection('users');
   final CollectionReference binslist =
   FirebaseFirestore.instance.collection('bins');
 
+  DatabaseReference database = FirebaseDatabase.instance.reference();
+  // fetch bins info
   Future getbins()async{
     List bins = [];
     try{
@@ -50,11 +54,18 @@ class DataBase_Manager {
     }
   }
 
+  // getcapacity(String id)async{
+  //   dynamic cap ;
+  //   database.child(id).once().then((value) {
+  //     // dynamic values = value.snapshot.value;
+  //     // values.forEach((key, values) {
+  //       cap = double.parse(value.snapshot.child('capacity').);
+  //     //});
+  //   });
+  // }
+
 
   // fetch profile info
-  final CollectionReference workerslist =
-  FirebaseFirestore.instance.collection('users');
-
   Future getworkers()async{
     List workers = [];
     try{
@@ -95,5 +106,10 @@ class DataBase_Manager {
     }catch(e){
       print(e.toString());
     }
+  }
+  sendusertoken(dynamic uid , String token)async{
+    await workerslist.doc(uid.toString()).update({
+      'token' : token ,
+    });
   }
 }

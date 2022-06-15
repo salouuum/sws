@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +16,7 @@ class User_Home extends StatefulWidget {
 }
 
 class _User_HomeState extends State<User_Home> {
+
  int FAB = 0;
  List<IconData> icon = [
    Icons.list ,
@@ -23,6 +26,12 @@ class _User_HomeState extends State<User_Home> {
    UserMap(),
    BinList(),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

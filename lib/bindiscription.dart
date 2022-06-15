@@ -2,6 +2,8 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
@@ -56,17 +58,102 @@ class _Bin_DiscriptionState extends State<Bin_Discription> {
       title: capacity.toString(),
     );
   }
+   Future update_cpacity(String id) async {
+
+     var cap;
+     var alarm;
+     FirebaseDatabase database = FirebaseDatabase.instance;
+
+     DatabaseReference ref = FirebaseDatabase.instance.ref(id);
+     FirebaseDatabase.instance.ref(id).get().then((event) {
+       print("---------------------");
+       print(event.child("capacity").value);
+       print(event.child("smoke").value);
+       cap=event.child("capacity").value;
+       alarm=event.child("smoke").value;
+       setState(() {
+
+       });
+       CollectionReference Reference =
+       FirebaseFirestore.instance.collection('bins');
+       Reference.where('NC-MA', isEqualTo: id).get().then((value) {
+         value.docs.forEach((element) {
+           print(element.id);
+           DocumentReference documentReference =
+           FirebaseFirestore.instance.collection('bins').doc(element.id);
+
+           Map<String, dynamic> adddata = ({
+
+             "capacity": cap,
+             "alarm": alarm,
+
+
+           });
+           // update data to Firebase
+           documentReference
+               .update(adddata)
+               .whenComplete(() => print('updated'));
+         });
+       });
+
+     });
+
+
+   }
 
   @override
   void initState() {
     getbincapacity(widget.bin_id);
     super.initState();
     Timer timer = Timer.periodic(Duration(seconds: 3), (timer)async {
+      update_cpacity(widget.bin_id);
       getbincapacity(widget.bin_id);
     });
   }
   @override
   Widget build(BuildContext context) {
+    Future update_cpacity(String id) async {
+
+      var cap;
+      var alarm;
+      FirebaseDatabase database = FirebaseDatabase.instance;
+
+      DatabaseReference ref = FirebaseDatabase.instance.ref(id);
+      FirebaseDatabase.instance.ref(id).get().then((event) {
+        print("---------------------");
+        print(event.child("capacity").value);
+        print(event.child("smoke").value);
+        cap=event.child("capacity").value;
+        alarm=event.child("smoke").value;
+        setState(() {
+
+        });
+        CollectionReference Reference =
+        FirebaseFirestore.instance.collection('bins');
+        Reference.where('NC-MA', isEqualTo: id).get().then((value) {
+          value.docs.forEach((element) {
+            print(element.id);
+            DocumentReference documentReference =
+            FirebaseFirestore.instance.collection('bins').doc(element.id);
+
+            Map<String, dynamic> adddata = ({
+
+              "capacity": cap,
+              "alarm": alarm,
+
+
+            });
+            // update data to Firebase
+            documentReference
+                .update(adddata)
+                .whenComplete(() => print('updated'));
+          });
+        });
+
+      });
+
+
+    }
     return Scaffold(
         body: SafeArea(
           child: Container(
