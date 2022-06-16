@@ -26,21 +26,12 @@ class _BinListState extends State<BinList> {
   var isloaded =false;
   DatabaseReference dbref = FirebaseDatabase.instance.ref();
   List? bins ;
-  var capac = [] ;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getbins();
 
-
-    Timer timer = Timer.periodic(Duration(seconds: 3), (timer) {
-      for(int i = 0 ; i < bins!.length ; i++){
-        update_cpacity(bins![i]['NC-MA']);
-      }
-      getbins();
-
-    });
   }
   getbins()async{
     List resultant = await DataBase_Manager().getavailablebins();
@@ -99,13 +90,14 @@ class _BinListState extends State<BinList> {
   
   @override
   Widget build(BuildContext context) {
-    getbins();
     if(bins!= null){
       for(int i = 0 ; i < bins!.length ; i++){
         update_cpacity(bins![i]['NC-MA']);
       }
     }
+    getbins();
     return  getbody();
+
   }
   AssetImage getimage(dynamic bin){
     AssetImage image ;

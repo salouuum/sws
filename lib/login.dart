@@ -120,7 +120,7 @@ class _Login_SWSState extends State<Login_SWS> {
                     onPressed: ()async{
                       dynamic user = await signin();
                       await savepref(user.uid.toString());
-                      await saveemail (emailcontroller.text);
+                       await saveemail (emailcontroller.text ,passwordcontroller.text );
                       if(FormKey.currentState!.validate()){
                       if( user ==null){
                         print('something went wrong');
@@ -128,8 +128,8 @@ class _Login_SWSState extends State<Login_SWS> {
                         emailcontroller.clear();
                         passwordcontroller.clear();
                         print('login successed');
-                       await db.sendusertoken(user.uid.toString(), token);
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StaffHome(uid: user.uid)));
+                       //
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StaffHome(uid: user.uid.toString(),token: token,)));
                       }
                     }
                       },
@@ -162,8 +162,10 @@ class _Login_SWSState extends State<Login_SWS> {
    await prefrences.setString('uid', uid);
   }
 
-  saveemail(String email)async {
+  saveemail(String email, String pass)async {
     final prefrences = await SharedPreferences.getInstance();
     await prefrences.setString('email', email);
+    await prefrences.setString('pass', pass);
+
   }
 }

@@ -123,17 +123,14 @@ class _Bin_Discription_RequestState extends State<Bin_Discription_Request> {
   }
 @override
 void initState() {
-    super.initState();
-    getpref();
-    getbincapacity(widget.bin_id);
-    Timer timer = Timer.periodic(Duration(seconds: 3), (timer)async {
-      update_cpacity(widget.bin_id);
-      getbincapacity(widget.bin_id);
-    });
+  super.initState();
+  getpref();
+  getbincapacity(widget.bin_id);
 }
   @override
   Widget build(BuildContext context) {
     update_cpacity(widget.bin_id);
+    getbincapacity(widget.bin_id);
     return Scaffold(
         body: SafeArea(
           child: Container(
@@ -223,37 +220,37 @@ void initState() {
                           child: MaterialButton(
 
                             onPressed: ()async{
-                                if (_token == null) {
-                                  print('Unable to send FCM message, no token exists.');
-                                  return;
-                                }
-                                try {
-                                  await http
-                                      .post(
-                                    Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                                    headers: <String, String>{
-                                      'Content-Type': 'application/json',
-                                      'Authorization':
-                                      'key=AAAAlxjSVh0:APA91bEsooijUbNihkC-PYqFiBdzDtcu1oPdMnA6a_gn01mn4MsfWWcRhBTXsKfwW52skhbAnJxlpagrNNpVijoFrNlfKY5Y1viLDlx-TFZFgXFXqbIlm5sL2Dvh7CeKuSyuYsYutDL7'
-                                    },
-                                    body: json.encode({
-                                      'to': _token,
-                                      'message': {
-                                        'token': _token,
-                                      },
-                                      "notification": {
-                                        "title": "Push Notification",
-                                        "body": "Firebase  push notification 35464684k-------------"
-                                      }
-                                    }),
-                                  )
-                                      .then((value) => print(value.body));
-                                  print('FCM request for web sent!');
-                                } catch (e) {
-                                  print(e);
-                                }
-
-                              //int cap = await getbincapacity(widget.bin_id);
+                              //   if (_token == null) {
+                              //     print('Unable to send FCM message, no token exists.');
+                              //     return;
+                              //   }
+                              //   try {
+                              //     await http
+                              //         .post(
+                              //       Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                              //       headers: <String, String>{
+                              //         'Content-Type': 'application/json',
+                              //         'Authorization':
+                              //         'key=AAAAlxjSVh0:APA91bEsooijUbNihkC-PYqFiBdzDtcu1oPdMnA6a_gn01mn4MsfWWcRhBTXsKfwW52skhbAnJxlpagrNNpVijoFrNlfKY5Y1viLDlx-TFZFgXFXqbIlm5sL2Dvh7CeKuSyuYsYutDL7'
+                              //       },
+                              //       body: json.encode({
+                              //         'to': _token,
+                              //         'message': {
+                              //           'token': _token,
+                              //         },
+                              //         "notification": {
+                              //           "title": "Push Notification",
+                              //           "body": "Firebase  push notification 35464684k-------------"
+                              //         }
+                              //       }),
+                              //     )
+                              //         .then((value) => print(value.body));
+                              //     print('FCM request for web sent!');
+                              //   } catch (e) {
+                              //     print(e);
+                              //   }
+                              //
+                              // //int cap = await getbincapacity(widget.bin_id);
                              if (cap<10){
                                setState(() {
                                  db_manager.add_history(uid, widget.bin_id, location!);

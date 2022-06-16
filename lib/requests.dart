@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bin.dart';
 import 'bindiscription.dart';
@@ -20,27 +23,83 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   List? bins ;
+  String? email;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getpref();
     getbins();
-    Timer timer = Timer.periodic(Duration(seconds: 3), (timer) {
-    getbins();
-    });
+
+
   }
   getbins()async{
     dynamic resultant = await DataBase_Manager().getfullbins();
     if(resultant==null){
       print('unable to relieve');
     }else{
+
       setState(() {
         bins=resultant;
       });
     }
   }
+  getpref()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() async {
+      email = await preferences.getString('email');
+    });
+  }
+  Future update_cpacity(String id) async {
+
+    var cap;
+    var alarm;
+    FirebaseDatabase database = FirebaseDatabase.instance;
+
+    DatabaseReference ref = FirebaseDatabase.instance.ref(id);
+    FirebaseDatabase.instance.ref(id).get().then((event) {
+      print("---------------------");
+      print(event.child("capacity").value);
+      print(event.child("smoke").value);
+      cap=event.child("capacity").value;
+      alarm=event.child("smoke").value;
+      setState(() {
+
+      });
+      CollectionReference Reference =
+      FirebaseFirestore.instance.collection('bins');
+      Reference.where('NC-MA', isEqualTo: id).get().then((value) {
+        value.docs.forEach((element) {
+          print(element.id);
+          DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('bins').doc(element.id);
+
+          Map<String, dynamic> adddata = ({
+
+            "capacity": cap,
+            "alarm": alarm,
+
+
+          });
+          // update data to Firebase
+          documentReference
+              .update(adddata)
+              .whenComplete(() => print('updated'));
+        });
+      });
+
+    });
+
+
+  }
   @override
   Widget build(BuildContext context) {
+    if(bins!= null){
+      for(int i = 0 ; i < bins!.length ; i++){
+        update_cpacity(bins![i]['NC-MA']);
+      }
+    }
+    getbins();
     return getbody();
   }
   AssetImage getimage(dynamic bin){

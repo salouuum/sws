@@ -3,12 +3,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DataBase_Manager {
-  final CollectionReference workerslist =
-  FirebaseFirestore.instance.collection('users');
+
   final CollectionReference binslist =
   FirebaseFirestore.instance.collection('bins');
 
-  DatabaseReference database = FirebaseDatabase.instance.reference();
+
   // fetch bins info
   Future getbins()async{
     List bins = [];
@@ -53,19 +52,25 @@ class DataBase_Manager {
       print(e.toString());
     }
   }
-
-  // getcapacity(String id)async{
-  //   dynamic cap ;
-  //   database.child(id).once().then((value) {
-  //     // dynamic values = value.snapshot.value;
-  //     // values.forEach((key, values) {
-  //       cap = double.parse(value.snapshot.child('capacity').);
-  //     //});
-  //   });
-  // }
+  getaccountbins(String email)async{
+    List bins = await this.getbins();
+    List accountbins = [];
+    try{
+      for(int i = 0 ; i < bins!.length ; i++ ){
+        if(bins[i]['email']== email){
+          accountbins.add(bins[i]);
+        }
+      }
+      return accountbins;
+    }catch(e){
+      print(e.toString());
+    }
+  }
 
 
   // fetch profile info
+  final CollectionReference workerslist =
+  FirebaseFirestore.instance.collection('users');
   Future getworkers()async{
     List workers = [];
     try{
@@ -88,8 +93,9 @@ class DataBase_Manager {
     }
   }
   add_history (dynamic uid , String id , LatLng location )async{
+
     await workerslist.doc(uid).collection('history').add({
-    'id' : id ,
+      'id': id ,
       'location' : location.toString(),
       'time' : DateTime.now(),
     });

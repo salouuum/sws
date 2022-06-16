@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,7 +19,7 @@ class UserMap extends StatefulWidget {
 
 class _UserMapState extends State<UserMap> {
   late GoogleMapController googleMapController;
-  List? bins;
+  List? availablebins;
   getbins()async{
     dynamic resultant = await DataBase_Manager().getavailablebins();
     if(resultant==null){
@@ -25,6 +27,7 @@ class _UserMapState extends State<UserMap> {
     }else{
       setState(() {
         _setmarkers(resultant);
+          availablebins = resultant;
       });
     }
   }
@@ -94,6 +97,7 @@ class _UserMapState extends State<UserMap> {
     return image;
   }
   void _setmarkers(List binslist) {
+    markers.clear();
     for (int i = 0; i < binslist!.length; i++) {
       Marker marker = Marker(
           markerId: MarkerId(binslist[i]['NC-MA']),
@@ -115,20 +119,71 @@ class _UserMapState extends State<UserMap> {
       });
     }
   }
+
+
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796133580664, -122.085749655962), zoom: 14);
   List<Marker> markers = [];
+  Future update_cpacity(String id) async {
+
+    var cap;
+    var alarm;
+    FirebaseDatabase database = FirebaseDatabase.instance;
+
+    DatabaseReference ref = FirebaseDatabase.instance.ref(id);
+    FirebaseDatabase.instance.ref(id).get().then((event) {
+      print("---------------------");
+      print(event.child("capacity").value);
+      print(event.child("smoke").value);
+      cap=event.child("capacity").value;
+      alarm=event.child("smoke").value;
+      setState(() {
+
+      });
+      CollectionReference Reference =
+      FirebaseFirestore.instance.collection('bins');
+      Reference.where('NC-MA', isEqualTo: id).get().then((value) {
+        value.docs.forEach((element) {
+          print(element.id);
+          DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('bins').doc(element.id);
+
+          Map<String, dynamic> adddata = ({
+
+            "capacity": cap,
+            "alarm": alarm,
+
+
+          });
+          // update data to Firebase
+          documentReference
+              .update(adddata)
+              .whenComplete(() => print('updated'));
+        });
+      });
+
+    });
+
+
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _gotolocation();
     getbins();
-    Timer timer = Timer.periodic(Duration(seconds: 3), (timer) {
-     getbins();
-    });
+    // Timer timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    //   getbins();
+    // });
   }
   @override
   Widget build(BuildContext context) {
+    if(availablebins!= null){
+      for(int i = 0 ; i < availablebins!.length ; i++){
+        update_cpacity(availablebins![i]['NC-MA']);
+      }
+    }
+    getbins();
+
     return Scaffold(
       body:SafeArea(
         child: Stack(

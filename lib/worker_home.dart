@@ -4,11 +4,14 @@ import 'package:sws/profile.dart';
 import 'package:sws/requests.dart';
 import 'package:sws/worker_map.dart';
 import 'allbins.dart';
+import 'database_manager/Database.dart';
 
 class StaffHome extends StatefulWidget {
 final dynamic uid ;
+final String token ;
 StaffHome({
   required this.uid,
+  required this.token,
 });
 
   @override
@@ -16,6 +19,7 @@ StaffHome({
 }
 
 class _StaafHomeState extends State<StaffHome> {
+  DataBase_Manager db = DataBase_Manager();
 
   int current = 0;
   List<Widget> screen = [
@@ -27,9 +31,16 @@ class _StaafHomeState extends State<StaffHome> {
     Icons.list ,
     Icons.map ,
   ];
+sendtoken()async{
+  await db.sendusertoken(widget.uid, widget.token);
+}
 
+@override
+  void initState() {
+    // TODO: implement initState
 
-
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

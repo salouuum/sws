@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 15.0,),
               Center(
                 child: Text(
-                  'Total Bins Today',
+                  'Total Bins this month',
                   style: GoogleFonts.yanoneKaffeesatz(
                       textStyle: TextStyle(
                           color: Colors.white,
@@ -359,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 15.0,),
               Center(
                 child: Text(
-                  'Total Earned Today',
+                  'Total Earned this month',
                   style: GoogleFonts.yanoneKaffeesatz(
                       textStyle: TextStyle(
                           color: Colors.white,
